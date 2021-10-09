@@ -1,14 +1,26 @@
-const http = require('http');
+var express = require('express');
+var path = require('path');
+var cookieParser = require('cookie-parser');
+var logger = require('morgan');
+var tuRouter = require('./routes/tuRouter');
 
-const hostname = '0.0.0.0';
-const port = 8080;
+var app = express();
 
-const server = http.createServer((req, res) => {
-    console.log("it works");
-    res.setHeader('Content-Type', 'text/plain');
-    res.end('Hello World');
-});
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+//Heroku purposes
+app.use(express.static(path.join(__dirname, 'client/build')));
 
-server.listen(port, hostname, () => {
-    console.log(`Server running at https://${hostname}:${port}/`);
-});
+if(process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, 'client/build')));
+    //
+    app.get('*', (req, res) => {
+        res.sendfile(path.join(__dirname = 'client/build/index.html'));
+    })
+}
+// End heroku purposes
+//Setear rutas aca
+app.use('/', tuRouter);
+module.exports = app;
