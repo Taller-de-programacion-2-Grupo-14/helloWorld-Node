@@ -1,5 +1,5 @@
-var express = require('express');
-var router = express.Router();
+let express = require('express');
+let router = express.Router();
 const {validateSchema} = require("../validators/middlewareValidator");
 
 function errorHandler(err, req, res, next) {
@@ -16,3 +16,4 @@ function errorHandler(err, req, res, next) {
 router.get("/ping", (req, res) => {
     res.send("pong")
 })
+module.exports = router;
